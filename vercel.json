@@ -1,0 +1,22 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/news-topstories",
+      "destination": "https://legal.economictimes.indiatimes.com/rss/topstories"
+    },
+    {
+      "source": "/api/news-litigation",
+      "destination": "https://legal.economictimes.indiatimes.com/rss/litigation"
+    },
+    {
+      "source": "/api/news-policy",
+      "destination": "https://legal.economictimes.indiatimes.com/rss/law-policy"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
