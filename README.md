@@ -4,11 +4,15 @@
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://react.dev/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://docuintel-ai-six.vercel.app)
 [![Docs-as-Code](https://img.shields.io/badge/Docs--as--Code-DITA%20%7C%20Diátaxis-purple.svg)](#topic-based-authoring-standard)
 [![Style Guide Compliance](https://img.shields.io/badge/Quality%20Gate-Automated%20Linter-brightgreen.svg)](#automated-style--terminology-linter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **DocuIntel-AI** is an AI-powered documentation engineering and quality assurance platform designed for technical writing teams, developer documentation portals, and Docs-as-Code Git publishing pipelines.
+
+> 🌐 **Live Production Deployment**: [https://docuintel-ai-six.vercel.app](https://docuintel-ai-six.vercel.app)  
+> 📦 **GitHub Repository**: [https://github.com/AtharvaDhobale/DocuIntel-AI](https://github.com/AtharvaDhobale/DocuIntel-AI)
 
 Built to address the realities of modern enterprise documentation (inspired by **Cohesity's** documentation and AI-assisted authoring pilots), DocuIntel-AI cuts time-to-publish by **58%**, enforces strict terminology standards, detects documentation gaps before users encounter them, and maintains a mandatory **Human Accuracy Gate** to eliminate AI hallucination risks.
 
