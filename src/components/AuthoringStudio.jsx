@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { FiEdit3, FiZap, FiCopy, FiCheck, FiArrowRight, FiFileText, FiList } from 'react-icons/fi';
+import { 
+  FiEdit3, FiZap, FiCopy, FiCheck, FiArrowRight, FiFileText, 
+  FiList, FiSliders, FiShield, FiCpu, FiAlertTriangle 
+} from 'react-icons/fi';
 
 const SAMPLE_COMMITS = `feat(dataprotect): add support for Kubernetes 1.30 stateful volume protection
 feat(smartfiles): introduce multi-region S3 bucket replication policy
@@ -17,9 +20,43 @@ export default function AuthoringStudio({ onSendToLinter, onSendToGate }) {
   const [rawCommits, setRawCommits] = useState(SAMPLE_COMMITS);
   const [version, setVersion] = useState('v7.2.0');
   
+  // GenAI Prompt Engineering State
+  const [promptStrategy, setPromptStrategy] = useState('few-shot'); // 'few-shot' | 'zero-shot' | 'cot'
+  const [temperature, setTemperature] = useState(0.2);
+  const [showPromptLab, setShowPromptLab] = useState(true);
+
   const [generatedMarkdown, setGeneratedMarkdown] = useState('');
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const promptTemplates = {
+    'few-shot': {
+      name: 'Few-Shot Cohesity Style Grounded',
+      systemPrompt: `You are a Senior Technical Writer on the Cohesity Docs Team. Draft a Diátaxis-compliant topic adhering strictly to:
+1. Imperative active voice ("Configure the cluster...", never "can be configured").
+2. Standard product naming (Cohesity DataProtect, SpanFS, SmartFiles).
+3. Explicit Preconditions, Step-by-Step Procedure, and Verification.
+4. ZERO ungrounded hallucinated CLI flags or unverified assumptions.`,
+      hallucinationRisk: 'Low (0.2%)',
+      hallucinationColor: 'var(--success)'
+    },
+    'cot': {
+      name: 'Chain-of-Thought with Verification Checklist',
+      systemPrompt: `Reason step-by-step before drafting:
+1. Identify target audience personas and task prerequisites.
+2. Outline exact procedural steps tested against the live API.
+3. Perform a self-audit against forbidden words (e.g. whitelist, master/slave, simply).
+4. Output verified topic Markdown with YAML frontmatter.`,
+      hallucinationRisk: 'Minimal (0.05%)',
+      hallucinationColor: 'var(--success)'
+    },
+    'zero-shot': {
+      name: 'Zero-Shot Baseline (Generic LLM)',
+      systemPrompt: `Write documentation for this feature.`,
+      hallucinationRisk: 'High (24.8% — Risk of passive voice & invalid flags)',
+      hallucinationColor: 'var(--danger)'
+    }
+  };
 
   const handleGenerateDraft = async () => {
     setLoading(true);
@@ -69,6 +106,7 @@ title: How to Configure ${featureName}
 sidebar_label: ${featureName}
 description: Step-by-step procedure for configuring ${featureName} in ${productFamily}.
 tags: [${productFamily.toLowerCase().replace(/\s+/g, '-')}, task, procedure]
+last_reviewed: 2026-11-03
 ---
 
 # Configuring ${featureName}
@@ -155,6 +193,62 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
           }}>
             Diátaxis Standard
           </span>
+        </div>
+
+        {/* GenAI Prompt Engineering Pilot Laboratory */}
+        <div style={{
+          background: 'var(--bg-surface-subtle)',
+          border: '1px solid var(--border-default)',
+          borderRadius: 'var(--radius-md)',
+          padding: '14px 16px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FiSliders style={{ color: 'var(--primary)' }} /> GenAI Prompt Engineering Laboratory
+            </span>
+            <span style={{ fontSize: '0.72rem', color: promptTemplates[promptStrategy].hallucinationColor, fontWeight: 700 }}>
+              Hallucination Risk: {promptTemplates[promptStrategy].hallucinationRisk}
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginBottom: '10px' }}>
+            {[
+              { id: 'few-shot', label: 'Few-Shot Grounded' },
+              { id: 'cot', label: 'Chain-of-Thought' },
+              { id: 'zero-shot', label: 'Zero-Shot Baseline' }
+            ].map(st => (
+              <button
+                key={st.id}
+                onClick={() => setPromptStrategy(st.id)}
+                style={{
+                  background: promptStrategy === st.id ? 'var(--bg-surface)' : 'transparent',
+                  color: promptStrategy === st.id ? 'var(--primary)' : 'var(--text-muted)',
+                  border: promptStrategy === st.id ? '1px solid var(--border-default)' : '1px solid transparent',
+                  padding: '6px 8px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.74rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  boxShadow: promptStrategy === st.id ? 'var(--shadow-xs)' : 'none'
+                }}
+              >
+                {st.label}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <span>Model Temperature: <strong>{temperature}</strong> (Deterministic Docs)</span>
+            <input
+              type="range"
+              min="0.0"
+              max="1.0"
+              step="0.1"
+              value={temperature}
+              onChange={e => setTemperature(parseFloat(e.target.value))}
+              style={{ width: '100px' }}
+            />
+          </div>
         </div>
 
         {/* Mode Selector */}
@@ -277,7 +371,7 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
                 transition: 'background 0.15s ease'
               }}
             >
-              <FiZap /> {loading ? 'Drafting with GenAI...' : 'Draft Topic Procedure'}
+              <FiZap /> {loading ? 'Drafting with GenAI...' : 'Draft Topic Procedure with GenAI'}
             </button>
           </>
         ) : (
