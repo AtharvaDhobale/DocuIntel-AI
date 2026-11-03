@@ -3,10 +3,10 @@ import { FiTrendingUp, FiCheckCircle, FiShield, FiClock, FiGitCommit, FiLayers }
 
 export default function MetricsDashboard() {
   const metrics = [
-    { label: 'Time-to-Publish Reduction', value: '58%', desc: 'vs. purely manual drafting', icon: FiClock, color: '#3fb950' },
-    { label: 'Style Guide Adherence', value: '98.4%', desc: 'automated terminology passes', icon: FiCheckCircle, color: '#58a6ff' },
-    { label: 'Hallucination Prevention', value: '100%', desc: 'zero unverified text in prod', icon: FiShield, color: '#a371f7' },
-    { label: 'Authoring Velocity', value: '3.2x', desc: 'faster release note turnaround', icon: FiTrendingUp, color: '#f0883e' },
+    { label: 'Time-to-Publish Reduction', value: '58%', desc: 'vs. purely manual drafting', icon: FiClock, color: 'var(--success)' },
+    { label: 'Style Guide Adherence', value: '98.4%', desc: 'automated terminology passes', icon: FiCheckCircle, color: 'var(--primary)' },
+    { label: 'Hallucination Prevention', value: '100%', desc: 'zero unverified text in prod', icon: FiShield, color: '#8b5cf6' },
+    { label: 'Authoring Velocity', value: '3.2x', desc: 'faster release note turnaround', icon: FiTrendingUp, color: 'var(--warning)' },
   ];
 
   const recentCommits = [
@@ -17,30 +17,36 @@ export default function MetricsDashboard() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1050px', margin: '0 auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '1050px', margin: '0 auto' }}>
       {/* Overview Card */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-        <h2 style={{ margin: '0 0 6px', fontSize: '1.25rem', color: '#f0f6fc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <FiLayers style={{ color: '#58a6ff' }} /> Documentation Intelligence & Pilot Metrics
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '28px',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <h2 style={{ margin: '0 0 6px', fontSize: '1.25rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <FiLayers style={{ color: 'var(--primary)' }} /> Documentation Intelligence & Pilot Metrics
         </h2>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: '#8b949e' }}>
+        <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--text-muted)' }}>
           Real-time metrics demonstrating why this GenAI & automation platform cuts time-to-publish, improves consistency, and eliminates hallucinations.
         </p>
 
         {/* 4 Big Numbers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '18px', marginTop: '24px' }}>
           {metrics.map((m, i) => {
             const Icon = m.icon;
             return (
-              <div key={i} style={{ background: '#0d1117', border: '1px solid #21262d', borderRadius: '8px', padding: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '0.8rem', color: '#8b949e', fontWeight: 600 }}>{m.label}</span>
-                  <Icon style={{ color: m.color }} />
+              <div key={i} style={{ background: 'var(--bg-surface-subtle)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>{m.label}</span>
+                  <Icon style={{ color: m.color }} size={18} />
                 </div>
-                <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#f0f6fc', marginBottom: '4px' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px', letterSpacing: '-0.5px' }}>
                   {m.value}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>{m.desc}</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{m.desc}</div>
               </div>
             );
           })}
@@ -48,23 +54,29 @@ export default function MetricsDashboard() {
       </div>
 
       {/* Docs-as-Code Publishing Stream */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-        <h3 style={{ margin: '0 0 16px', fontSize: '1rem', color: '#f0f6fc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <FiGitCommit style={{ color: '#3fb950' }} /> Git Docs-as-Code Audit Stream
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '28px',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <h3 style={{ margin: '0 0 18px', fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <FiGitCommit style={{ color: 'var(--success)' }} /> Git Docs-as-Code Audit Stream
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {recentCommits.map((c, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0d1117', border: '1px solid #21262d', borderRadius: '8px', padding: '12px 16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', background: '#21262d', color: '#58a6ff', padding: '2px 8px', borderRadius: '4px' }}>
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-surface-subtle)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '14px 18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', background: 'var(--bg-surface)', color: 'var(--primary)', border: '1px solid var(--border-default)', padding: '3px 10px', borderRadius: '6px', fontWeight: 600 }}>
                   {c.hash}
                 </span>
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e6edf3' }}>{c.title}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>By {c.author} • {c.time}</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>{c.title}</div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>By {c.author} • {c.time}</div>
                 </div>
               </div>
-              <span style={{ background: '#23863622', color: '#3fb950', border: '1px solid #23863644', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 500 }}>
+              <span style={{ background: 'var(--success-light)', color: 'var(--success)', border: '1px solid var(--success-border)', padding: '4px 12px', borderRadius: '12px', fontSize: '0.76rem', fontWeight: 600 }}>
                 {c.status}
               </span>
             </div>

@@ -26,7 +26,6 @@ export default function DocsLinterView({ initialMarkdown }) {
       const data = await res.json();
       setLintResult(data);
     } catch {
-      // Fallback local linter
       runLocalLint();
     } finally {
       setLoading(false);
@@ -45,7 +44,6 @@ export default function DocsLinterView({ initialMarkdown }) {
       setContent(data.fixed_markdown);
       handleRunLint();
     } catch {
-      // Local fallback auto-fix
       let fixed = content
         .replace(/can be configured by navigating to/gi, "Navigate to")
         .replace(/whitelist/gi, "allowlist")
@@ -125,27 +123,59 @@ export default function DocsLinterView({ initialMarkdown }) {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '24px', height: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '28px', height: '100%' }}>
       {/* Markdown Input Area */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#f0f6fc' }}>Documentation Style & Terminology Linter</h2>
-            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#8b949e' }}>
-              Automated linting against the Cohesity Docs Style Guide and terminology whitelist.
+            <h2 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)', fontWeight: 700 }}>
+              Documentation Style & Terminology Linter
+            </h2>
+            <p style={{ margin: '4px 0 0', fontSize: '0.84rem', color: 'var(--text-muted)' }}>
+              Automated linting against the Cohesity Docs Style Guide and terminology rules.
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setContent(SAMPLE_TEXT_WITH_ISSUES)}
-              style={{ background: '#21262d', color: '#8b949e', border: '1px solid #30363d', padding: '6px 10px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer' }}
+              style={{
+                background: 'var(--bg-surface-subtle)',
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border-default)',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                fontWeight: 500
+              }}
             >
               Load Sample Flawed Doc
             </button>
             <button
               onClick={handleApplyAutoFix}
               disabled={loading}
-              style={{ background: '#238636', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{
+                background: 'var(--success)',
+                color: '#fff',
+                border: 'none',
+                padding: '7px 14px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 1px 3px rgba(5, 150, 105, 0.3)'
+              }}
             >
               <FiTool /> 1-Click Auto-Fix
             </button>
@@ -160,14 +190,14 @@ export default function DocsLinterView({ initialMarkdown }) {
             flex: 1,
             width: '100%',
             boxSizing: 'border-box',
-            background: '#0d1117',
-            border: '1px solid #30363d',
-            borderRadius: '8px',
-            color: '#e6edf3',
-            padding: '14px',
-            fontFamily: 'Consolas, monospace',
-            fontSize: '0.85rem',
-            lineHeight: 1.5,
+            background: 'var(--bg-code)',
+            border: '1px solid var(--border-default)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--text-primary)',
+            padding: '16px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.86rem',
+            lineHeight: 1.6,
             resize: 'none'
           }}
         />
@@ -176,18 +206,20 @@ export default function DocsLinterView({ initialMarkdown }) {
           onClick={handleRunLint}
           disabled={loading}
           style={{
-            marginTop: '16px',
-            background: '#1f6feb',
+            marginTop: '18px',
+            background: 'var(--primary)',
             color: '#fff',
             border: 'none',
-            padding: '12px',
-            borderRadius: '6px',
+            padding: '12px 18px',
+            borderRadius: 'var(--radius-md)',
             fontWeight: 600,
+            fontSize: '0.9rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '8px',
+            boxShadow: '0 2px 4px rgba(37,99,235,0.25)'
           }}
         >
           <FiRefreshCw /> {loading ? 'Auditing Content...' : 'Run Automated Quality Lint'}
@@ -195,46 +227,56 @@ export default function DocsLinterView({ initialMarkdown }) {
       </div>
 
       {/* Lint Report Side */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid #30363d', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ margin: '0 0 16px', fontSize: '1rem', color: '#f0f6fc', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>Quality Audit Scorecard</span>
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border-default)', paddingBottom: '14px' }}>
+          <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 700 }}>
+            Quality Audit Scorecard
+          </h3>
           {lintResult && (
             <span style={{
-              background: lintResult.status === 'PASS' ? '#23863622' : '#da363322',
-              color: lintResult.status === 'PASS' ? '#3fb950' : '#f85149',
-              padding: '4px 10px',
+              background: lintResult.status === 'PASS' ? 'var(--success-light)' : 'var(--danger-light)',
+              color: lintResult.status === 'PASS' ? 'var(--success)' : 'var(--danger)',
+              padding: '4px 12px',
               borderRadius: '20px',
               fontSize: '0.75rem',
-              fontWeight: 600,
-              border: `1px solid ${lintResult.status === 'PASS' ? '#23863655' : '#da363355'}`
+              fontWeight: 700,
+              border: `1px solid ${lintResult.status === 'PASS' ? 'var(--success-border)' : 'var(--danger-border)'}`
             }}>
               {lintResult.status}
             </span>
           )}
-        </h3>
+        </div>
 
         {lintResult ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, overflowY: 'auto' }}>
             {/* Meter */}
-            <div style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', padding: '16px' }}>
+            <div style={{ background: 'var(--bg-surface-subtle)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontSize: '0.85rem', color: '#8b949e' }}>Style Guide Compliance</span>
-                <span style={{ fontWeight: 700, color: lintResult.quality_score >= 80 ? '#3fb950' : lintResult.quality_score >= 50 ? '#d29922' : '#f85149' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>Style Guide Compliance</span>
+                <span style={{ fontWeight: 800, fontSize: '1.05rem', color: lintResult.quality_score >= 80 ? 'var(--success)' : lintResult.quality_score >= 50 ? 'var(--warning)' : 'var(--danger)' }}>
                   {lintResult.quality_score} / 100
                 </span>
               </div>
-              <div style={{ background: '#21262d', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ background: 'var(--border-default)', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{
                   width: `${lintResult.quality_score}%`,
                   height: '100%',
-                  background: lintResult.quality_score >= 80 ? '#238636' : lintResult.quality_score >= 50 ? '#d29922' : '#da3633',
+                  background: lintResult.quality_score >= 80 ? 'var(--success)' : lintResult.quality_score >= 50 ? 'var(--warning)' : 'var(--danger)',
                   transition: 'width 0.4s ease'
                 }} />
               </div>
-              <div style={{ display: 'flex', gap: '16px', marginTop: '12px', fontSize: '0.8rem', color: '#8b949e' }}>
-                <span>🔴 Errors: <strong style={{ color: '#f85149' }}>{lintResult.stats?.errors || 0}</strong></span>
-                <span>🟡 Warnings: <strong style={{ color: '#d29922' }}>{lintResult.stats?.warnings || 0}</strong></span>
-                <span>🔵 Info: <strong style={{ color: '#58a6ff' }}>{lintResult.stats?.info || 0}</strong></span>
+              <div style={{ display: 'flex', gap: '18px', marginTop: '12px', fontSize: '0.82rem', fontWeight: 600 }}>
+                <span style={{ color: 'var(--danger)' }}>🔴 Errors: {lintResult.stats?.errors || 0}</span>
+                <span style={{ color: 'var(--warning)' }}>🟡 Warnings: {lintResult.stats?.warnings || 0}</span>
+                <span style={{ color: 'var(--primary)' }}>🔵 Info: {lintResult.stats?.info || 0}</span>
               </div>
             </div>
 
@@ -243,41 +285,44 @@ export default function DocsLinterView({ initialMarkdown }) {
               {lintResult.issues && lintResult.issues.length > 0 ? (
                 lintResult.issues.map((issue, idx) => (
                   <div key={idx} style={{
-                    background: '#0d1117',
-                    borderLeft: `4px solid ${issue.severity === 'Error' ? '#f85149' : issue.severity === 'Warning' ? '#d29922' : '#58a6ff'}`,
-                    borderTop: '1px solid #21262d',
-                    borderRight: '1px solid #21262d',
-                    borderBottom: '1px solid #21262d',
-                    borderRadius: '6px',
-                    padding: '12px'
+                    background: 'var(--bg-surface)',
+                    borderLeft: `4px solid ${issue.severity === 'Error' ? 'var(--danger)' : issue.severity === 'Warning' ? 'var(--warning)' : 'var(--primary)'}`,
+                    borderTop: '1px solid var(--border-default)',
+                    borderRight: '1px solid var(--border-default)',
+                    borderBottom: '1px solid var(--border-default)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '12px 14px',
+                    boxShadow: 'var(--shadow-xs)'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: issue.severity === 'Error' ? '#f85149' : issue.severity === 'Warning' ? '#d29922' : '#58a6ff' }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 700, color: issue.severity === 'Error' ? 'var(--danger)' : issue.severity === 'Warning' ? 'var(--warning)' : 'var(--primary)' }}>
                         Line {issue.line} • {issue.type}
                       </span>
-                      <span style={{ fontSize: '0.7rem', color: '#8b949e', textTransform: 'uppercase' }}>{issue.severity}</span>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{issue.severity}</span>
                     </div>
-                    <p style={{ margin: '0 0 6px', fontSize: '0.85rem', color: '#c9d1d9' }}>{issue.message}</p>
+                    <p style={{ margin: '0 0 6px', fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>{issue.message}</p>
                     {issue.suggestion && (
-                      <p style={{ margin: 0, fontSize: '0.8rem', color: '#58a6ff', background: '#1f6feb11', padding: '4px 8px', borderRadius: '4px' }}>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '6px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--primary-border)' }}>
                         💡 <strong>Suggestion:</strong> {issue.suggestion}
-                      </p>
+                      </div>
                     )}
                   </div>
                 ))
               ) : (
-                <div style={{ textAlign: 'center', padding: '30px', color: '#3fb950' }}>
-                  <FiCheckCircle size={36} />
-                  <p style={{ marginTop: '8px', fontWeight: 600 }}>Zero Style Violations Detected!</p>
-                  <p style={{ fontSize: '0.8rem', color: '#8b949e' }}>Topic strictly conforms to Cohesity Docs Style Guide.</p>
+                <div style={{ textAlign: 'center', padding: '36px', color: 'var(--success)' }}>
+                  <FiCheckCircle size={40} style={{ strokeWidth: 1.5 }} />
+                  <p style={{ marginTop: '10px', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>Zero Style Violations Detected!</p>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Topic strictly conforms to Cohesity Docs Style Guide.</p>
                 </div>
               )}
             </div>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#8b949e', margin: 'auto' }}>
-            <FiAlertTriangle size={32} style={{ marginBottom: '10px' }} />
-            <p>Click <strong>"Run Automated Quality Lint"</strong> to audit content for passive voice, unapproved words, link accessibility, and frontmatter completeness.</p>
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)', margin: 'auto' }}>
+            <FiAlertTriangle size={36} style={{ marginBottom: '12px', color: 'var(--warning)' }} />
+            <p style={{ fontSize: '0.9rem', maxWidth: '300px', margin: '0 auto', lineHeight: 1.5 }}>
+              Click <strong>"Run Automated Quality Lint"</strong> to audit content for passive voice, unapproved words, link accessibility, and frontmatter.
+            </p>
           </div>
         )}
       </div>

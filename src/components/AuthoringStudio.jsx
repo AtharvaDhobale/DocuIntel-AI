@@ -38,7 +38,6 @@ export default function AuthoringStudio({ onSendToLinter, onSendToGate }) {
       const data = await res.json();
       setGeneratedMarkdown(data.markdown);
     } catch {
-      // Fallback local generator if backend not active
       generateLocalDraft();
     } finally {
       setLoading(false);
@@ -124,27 +123,44 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', height: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: '28px', height: '100%' }}>
       {/* Left Column: Authoring Workbench */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid var(--border-color, #30363d)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color, #30363d)', paddingBottom: '14px' }}>
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-default)', paddingBottom: '16px' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#f0f6fc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FiEdit3 style={{ color: '#58a6ff' }} /> GenAI Docs Authoring Studio
+            <h2 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FiEdit3 style={{ color: 'var(--primary)' }} /> GenAI Docs Authoring Studio
             </h2>
-            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#8b949e' }}>
+            <p style={{ margin: '4px 0 0', fontSize: '0.84rem', color: 'var(--text-muted)' }}>
               Structured topic-based authoring & release notes assembly pilot.
             </p>
           </div>
-          <span style={{ fontSize: '0.75rem', background: '#1f6feb22', color: '#58a6ff', padding: '4px 10px', borderRadius: '20px', border: '1px solid #1f6feb44' }}>
-            Docs-as-Code Engine
+          <span style={{
+            fontSize: '0.74rem',
+            background: 'var(--primary-light)',
+            color: 'var(--primary)',
+            padding: '4px 10px',
+            borderRadius: '20px',
+            border: '1px solid var(--primary-border)',
+            fontWeight: 600
+          }}>
+            Diátaxis Standard
           </span>
         </div>
 
         {/* Mode Selector */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '8px', fontWeight: 600 }}>
-            TOPIC ARCHETYPE (DITA / DIÁTAXIS FRAMEWORK)
+          <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Topic Archetype (DITA / Diátaxis)
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
             {[
@@ -157,15 +173,16 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
                 key={t.id}
                 onClick={() => setTopicType(t.id)}
                 style={{
-                  background: topicType === t.id ? '#1f6feb' : '#21262d',
-                  color: topicType === t.id ? '#ffffff' : '#c9d1d9',
-                  border: '1px solid ' + (topicType === t.id ? '#388bfd' : '#30363d'),
-                  borderRadius: '6px',
-                  padding: '8px 10px',
-                  fontSize: '0.8rem',
+                  background: topicType === t.id ? 'var(--primary)' : 'var(--bg-surface-subtle)',
+                  color: topicType === t.id ? '#ffffff' : 'var(--text-secondary)',
+                  border: '1px solid ' + (topicType === t.id ? 'var(--primary)' : 'var(--border-default)'),
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '9px 10px',
+                  fontSize: '0.82rem',
                   cursor: 'pointer',
-                  fontWeight: 500,
-                  transition: 'all 0.2s ease'
+                  fontWeight: 600,
+                  transition: 'all 0.15s ease',
+                  boxShadow: topicType === t.id ? '0 2px 4px rgba(37,99,235,0.2)' : 'none'
                 }}
               >
                 {t.label}
@@ -177,11 +194,19 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
         {topicType !== 'release-notes' ? (
           <>
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '6px', fontWeight: 600 }}>PRODUCT SUITE</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>PRODUCT SUITE</label>
               <select
                 value={productFamily}
                 onChange={e => setProductFamily(e.target.value)}
-                style={{ width: '100%', background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9', padding: '8px 12px', borderRadius: '6px' }}
+                style={{
+                  width: '100%',
+                  background: 'var(--bg-input)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '0.88rem'
+                }}
               >
                 <option value="Cohesity DataProtect">Cohesity DataProtect</option>
                 <option value="Cohesity SmartFiles">Cohesity SmartFiles</option>
@@ -191,23 +216,43 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '6px', fontWeight: 600 }}>FEATURE / TOPIC TITLE</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>FEATURE / TOPIC TITLE</label>
               <input
                 type="text"
                 value={featureName}
                 onChange={e => setFeatureName(e.target.value)}
                 placeholder="e.g. S3 Object Lock in SmartFiles"
-                style={{ width: '100%', boxSizing: 'border-box', background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9', padding: '8px 12px', borderRadius: '6px' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'var(--bg-input)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '0.88rem'
+                }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '6px', fontWeight: 600 }}>FEATURE DESCRIPTION & SCOPE</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>FEATURE DESCRIPTION & SCOPE</label>
               <textarea
                 rows={3}
                 value={featureDescription}
                 onChange={e => setFeatureDescription(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9', padding: '8px 12px', borderRadius: '6px', resize: 'vertical' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'var(--bg-input)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '0.88rem',
+                  resize: 'vertical',
+                  lineHeight: 1.5
+                }}
               />
             </div>
 
@@ -215,18 +260,21 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
               onClick={handleGenerateDraft}
               disabled={loading}
               style={{
-                background: '#238636',
+                background: 'var(--primary)',
                 color: '#fff',
                 border: 'none',
-                padding: '10px 16px',
-                borderRadius: '6px',
+                padding: '12px 18px',
+                borderRadius: 'var(--radius-md)',
                 fontWeight: 600,
+                fontSize: '0.9rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                marginTop: 'auto'
+                marginTop: 'auto',
+                boxShadow: '0 2px 4px rgba(37,99,235,0.25)',
+                transition: 'background 0.15s ease'
               }}
             >
               <FiZap /> {loading ? 'Drafting with GenAI...' : 'Draft Topic Procedure'}
@@ -235,22 +283,42 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
         ) : (
           <>
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '6px', fontWeight: 600 }}>TARGET RELEASE VERSION</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>TARGET RELEASE VERSION</label>
               <input
                 type="text"
                 value={version}
                 onChange={e => setVersion(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9', padding: '8px 12px', borderRadius: '6px' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'var(--bg-input)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '0.88rem'
+                }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: '#8b949e', marginBottom: '6px', fontWeight: 600 }}>RAW GIT COMMITS / PR SUMMARIES</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>RAW GIT COMMITS / PR SUMMARIES</label>
               <textarea
                 rows={7}
                 value={rawCommits}
                 onChange={e => setRawCommits(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9', padding: '8px 12px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '0.8rem' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'var(--bg-input)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.82rem',
+                  lineHeight: 1.5
+                }}
               />
             </div>
 
@@ -258,18 +326,20 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
               onClick={handleAssembleReleaseNotes}
               disabled={loading}
               style={{
-                background: '#238636',
+                background: 'var(--primary)',
                 color: '#fff',
                 border: 'none',
-                padding: '10px 16px',
-                borderRadius: '6px',
+                padding: '12px 18px',
+                borderRadius: 'var(--radius-md)',
                 fontWeight: 600,
+                fontSize: '0.9rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                marginTop: 'auto'
+                marginTop: 'auto',
+                boxShadow: '0 2px 4px rgba(37,99,235,0.25)'
               }}
             >
               <FiZap /> {loading ? 'Assembling Release Notes...' : 'Assemble Customer Release Notes'}
@@ -279,18 +349,38 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
       </div>
 
       {/* Right Column: Markdown Output & Actions */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid var(--border-color, #30363d)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #30363d', paddingBottom: '12px', marginBottom: '14px' }}>
-          <span style={{ fontWeight: 600, color: '#f0f6fc', fontSize: '0.9rem' }}>Structured Markdown Preview</span>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              onClick={copyToClipboard}
-              disabled={!generatedMarkdown}
-              style={{ background: '#21262d', color: '#c9d1d9', border: '1px solid #30363d', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-            >
-              {copied ? <FiCheck style={{ color: '#3fb950' }} /> : <FiCopy />} {copied ? 'Copied' : 'Copy'}
-            </button>
-          </div>
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-default)', paddingBottom: '14px', marginBottom: '16px' }}>
+          <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+            Structured Markdown Output
+          </span>
+          <button
+            onClick={copyToClipboard}
+            disabled={!generatedMarkdown}
+            style={{
+              background: 'var(--bg-surface-subtle)',
+              color: 'var(--text-secondary)',
+              border: '1px solid var(--border-default)',
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '0.78rem',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            {copied ? <FiCheck style={{ color: 'var(--success)' }} /> : <FiCopy />} {copied ? 'Copied' : 'Copy'}
+          </button>
         </div>
 
         <textarea
@@ -301,37 +391,38 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
             flex: 1,
             width: '100%',
             boxSizing: 'border-box',
-            background: '#0d1117',
-            border: '1px solid #30363d',
-            borderRadius: '8px',
-            color: '#e6edf3',
-            padding: '14px',
-            fontFamily: 'Consolas, monospace',
-            fontSize: '0.85rem',
-            lineHeight: 1.5,
+            background: 'var(--bg-code)',
+            border: '1px solid var(--border-default)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--text-primary)',
+            padding: '16px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.86rem',
+            lineHeight: 1.6,
             resize: 'none'
           }}
         />
 
         {/* Handover Actions */}
-        <div style={{ display: 'flex', gap: '12px', marginTop: '16px', paddingTop: '14px', borderTop: '1px solid #30363d' }}>
+        <div style={{ display: 'flex', gap: '12px', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid var(--border-default)' }}>
           <button
             onClick={() => onSendToLinter && onSendToLinter(generatedMarkdown)}
             disabled={!generatedMarkdown}
             style={{
               flex: 1,
-              background: '#30363d',
-              color: '#f0f6fc',
-              border: '1px solid #8b949e44',
-              padding: '10px',
-              borderRadius: '6px',
+              background: 'var(--bg-surface-subtle)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-default)',
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
               fontSize: '0.85rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              fontWeight: 500
+              fontWeight: 500,
+              transition: 'all 0.15s ease'
             }}
           >
             Send to Style & Terminology Linter <FiArrowRight />
@@ -341,18 +432,19 @@ Confirm that the restored workload is powered on and reporting valid telemetry i
             disabled={!generatedMarkdown}
             style={{
               flex: 1,
-              background: '#1f6feb',
+              background: 'var(--primary)',
               color: '#ffffff',
               border: 'none',
-              padding: '10px',
-              borderRadius: '6px',
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
               fontSize: '0.85rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              fontWeight: 600
+              fontWeight: 600,
+              boxShadow: 'var(--shadow-xs)'
             }}
           >
             Forward to Human Accuracy Gate <FiArrowRight />

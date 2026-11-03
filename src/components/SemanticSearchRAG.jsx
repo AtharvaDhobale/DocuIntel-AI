@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiSearch, FiBookOpen, FiShield, FiAlertTriangle, FiCheckCircle, FiExternalLink } from 'react-icons/fi';
+import { FiSearch, FiBookOpen, FiShield, FiAlertTriangle, FiCheckCircle, FiExternalLink, FiZap } from 'react-icons/fi';
 
 const SAMPLE_QUERIES = [
   "How do I configure a protection policy for VMware VMs?",
@@ -28,7 +28,6 @@ export default function SemanticSearchRAG() {
       const data = await res.json();
       setResult(data);
     } catch {
-      // Local fallback RAG engine
       runLocalSearch(q);
     } finally {
       setLoading(false);
@@ -81,18 +80,29 @@ export default function SemanticSearchRAG() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', maxWidth: '960px', margin: '0 auto' }}>
-      {/* Header */}
-      <div style={{ background: 'var(--card-bg, #161b22)', border: '1px solid #30363d', borderRadius: '12px', padding: '24px' }}>
-        <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#f0f6fc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <FiSearch style={{ color: '#58a6ff' }} /> Semantic Docs Search & Smart Chatbot Pilot
-        </h2>
-        <p style={{ margin: '6px 0 16px', fontSize: '0.85rem', color: '#8b949e' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', height: '100%', maxWidth: '980px', margin: '0 auto' }}>
+      {/* Search Header */}
+      <div style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '28px',
+        boxShadow: 'var(--shadow-sm)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <FiSearch style={{ color: 'var(--primary)' }} /> Semantic Docs Search & Smart Chatbot Pilot
+          </h2>
+          <span style={{ fontSize: '0.74rem', background: 'var(--primary-light)', color: 'var(--primary)', padding: '3px 10px', borderRadius: '12px', border: '1px solid var(--primary-border)', fontWeight: 600 }}>
+            TF-IDF + Cosine Vector Engine
+          </span>
+        </div>
+        <p style={{ margin: '0 0 20px', fontSize: '0.86rem', color: 'var(--text-muted)' }}>
           Vector-retrieved documentation intelligence with strict citation grounding and automated Content Gap detection.
         </p>
 
         {/* Search Bar */}
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '12px' }}>
           <div style={{ flex: 1, position: 'relative' }}>
             <input
               type="text"
@@ -103,12 +113,13 @@ export default function SemanticSearchRAG() {
               style={{
                 width: '100%',
                 boxSizing: 'border-box',
-                background: '#0d1117',
-                border: '1px solid #30363d',
-                borderRadius: '8px',
-                color: '#f0f6fc',
-                padding: '12px 14px',
-                fontSize: '0.9rem'
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-primary)',
+                padding: '13px 16px',
+                fontSize: '0.92rem',
+                boxShadow: 'var(--shadow-xs)'
               }}
             />
           </div>
@@ -116,16 +127,18 @@ export default function SemanticSearchRAG() {
             onClick={() => handleSearch()}
             disabled={loading}
             style={{
-              background: '#1f6feb',
+              background: 'var(--primary)',
               color: '#fff',
               border: 'none',
-              padding: '0 20px',
-              borderRadius: '8px',
+              padding: '0 24px',
+              borderRadius: 'var(--radius-md)',
               fontWeight: 600,
+              fontSize: '0.9rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '8px',
+              boxShadow: '0 2px 4px rgba(37,99,235,0.25)'
             }}
           >
             <FiSearch /> {loading ? 'Retrieving...' : 'Search Docs'}
@@ -133,8 +146,8 @@ export default function SemanticSearchRAG() {
         </div>
 
         {/* Suggestion Chips */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px' }}>
-          <span style={{ fontSize: '0.75rem', color: '#8b949e', alignSelf: 'center' }}>Try test query:</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600 }}>Try queries:</span>
           {SAMPLE_QUERIES.map((sq, i) => (
             <button
               key={i}
@@ -143,13 +156,15 @@ export default function SemanticSearchRAG() {
                 handleSearch(sq);
               }}
               style={{
-                background: '#21262d',
-                color: sq.includes('quantum') ? '#d29922' : '#c9d1d9',
-                border: '1px solid #30363d',
+                background: sq.includes('quantum') ? 'var(--warning-light)' : 'var(--bg-surface-subtle)',
+                color: sq.includes('quantum') ? 'var(--warning)' : 'var(--text-secondary)',
+                border: `1px solid ${sq.includes('quantum') ? 'var(--warning-border)' : 'var(--border-default)'}`,
                 borderRadius: '16px',
-                padding: '4px 10px',
-                fontSize: '0.75rem',
-                cursor: 'pointer'
+                padding: '5px 12px',
+                fontSize: '0.78rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
               {sq.includes('quantum') ? '⚡ Test Gap: ' : ''}{sq}
@@ -160,65 +175,67 @@ export default function SemanticSearchRAG() {
 
       {/* Results View */}
       {result && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           {/* Hallucination / Content Gap Guard Banner */}
           {result.is_gap_detected ? (
             <div style={{
-              background: '#38250044',
-              border: '1px solid #d2992288',
-              borderRadius: '10px',
-              padding: '18px',
+              background: 'var(--warning-light)',
+              border: '1px solid var(--warning-border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '20px 24px',
               display: 'flex',
-              gap: '14px',
-              alignItems: 'flex-start'
+              gap: '16px',
+              alignItems: 'flex-start',
+              boxShadow: 'var(--shadow-xs)'
             }}>
-              <FiAlertTriangle size={24} style={{ color: '#d29922', flexShrink: 0, marginTop: '2px' }} />
+              <FiAlertTriangle size={24} style={{ color: 'var(--warning)', flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <h4 style={{ margin: '0 0 6px', color: '#e3b341', fontSize: '0.95rem' }}>
+                <h4 style={{ margin: '0 0 6px', color: 'var(--warning)', fontSize: '0.98rem', fontWeight: 700 }}>
                   Hallucination Guard Activated: Content Gap Detected
                 </h4>
-                <p style={{ margin: '0 0 10px', fontSize: '0.85rem', color: '#c9d1d9', lineHeight: 1.5 }}>
+                <p style={{ margin: '0 0 12px', fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                   The documentation engine identified that this user inquiry has low semantic match (&lt;12% confidence) with existing published documentation. Rather than fabricating an unverified response, DocuIntel-AI flags this query for the Docs Team.
                 </p>
-                <div style={{ fontSize: '0.8rem', color: '#8b949e', background: '#0d1117', padding: '8px 12px', borderRadius: '6px', border: '1px solid #30363d' }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)', background: 'var(--bg-surface)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--warning-border)' }}>
                   <strong>Next Step for Writer:</strong> Open <em>Authoring Studio</em> and draft a new topic answering: "{result.query}".
                 </div>
               </div>
             </div>
           ) : (
             <div style={{
-              background: 'var(--card-bg, #161b22)',
-              border: '1px solid #30363d',
-              borderRadius: '12px',
-              padding: '24px'
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-default)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '24px',
+              boxShadow: 'var(--shadow-sm)'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#3fb950', fontSize: '0.8rem', fontWeight: 600 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--success)', fontSize: '0.85rem', fontWeight: 700 }}>
                   <FiCheckCircle /> Verified Grounded Documentation
                 </span>
-                <span style={{ background: '#1f6feb22', color: '#58a6ff', padding: '4px 10px', borderRadius: '16px', fontSize: '0.75rem', fontWeight: 600, border: '1px solid #1f6feb44' }}>
+                <span style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.78rem', fontWeight: 700, border: '1px solid var(--primary-border)' }}>
                   {result.confidence_score}% Semantic Confidence
                 </span>
               </div>
 
-              <div style={{ fontSize: '0.95rem', color: '#e6edf3', lineHeight: 1.6, whiteSpace: 'pre-wrap', background: '#0d1117', padding: '16px', borderRadius: '8px', border: '1px solid #21262d' }}>
+              <div style={{ fontSize: '0.94rem', color: 'var(--text-primary)', lineHeight: 1.65, whiteSpace: 'pre-wrap', background: 'var(--bg-surface-subtle)', padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
                 {result.answer}
               </div>
 
               {/* Citations & Source Chunks */}
               {result.citations && result.citations.length > 0 && (
-                <div style={{ marginTop: '20px' }}>
-                  <h4 style={{ margin: '0 0 10px', fontSize: '0.85rem', color: '#8b949e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <div style={{ marginTop: '22px' }}>
+                  <h4 style={{ margin: '0 0 12px', fontSize: '0.82rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 700 }}>
                     Attributed Documentation Sources
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {result.citations.map((c, i) => (
-                      <div key={i} style={{ background: '#0d1117', border: '1px solid #21262d', borderRadius: '8px', padding: '12px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <span style={{ fontWeight: 600, color: '#58a6ff', fontSize: '0.85rem' }}>{c.title}</span>
-                          <span style={{ fontSize: '0.75rem', color: '#8b949e' }}>Category: {c.category}</span>
+                      <div key={i} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '14px', boxShadow: 'var(--shadow-xs)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <span style={{ fontWeight: 600, color: 'var(--primary)', fontSize: '0.88rem' }}>{c.title}</span>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Category: {c.category}</span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#8b949e', fontStyle: 'italic' }}>"{c.snippet}"</p>
+                        <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-secondary)', fontStyle: 'italic', lineHeight: 1.5 }}>"{c.snippet}"</p>
                       </div>
                     ))}
                   </div>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FiEdit3, FiCheckCircle, FiSearch, FiShield, FiTrendingUp, 
-  FiSun, FiMoon, FiGithub, FiBookOpen, FiTerminal, FiLayers
+  FiSun, FiMoon, FiGithub, FiBookOpen, FiExternalLink, FiZap
 } from 'react-icons/fi';
 
 import AuthoringStudio from './components/AuthoringStudio';
@@ -12,11 +12,15 @@ import MetricsDashboard from './components/MetricsDashboard';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('authoring');
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light'); // Default to crisp light theme
   
   // Pipeline handover state
   const [sharedMarkdown, setSharedMarkdown] = useState('');
   const [sharedTitle, setSharedTitle] = useState('');
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
@@ -36,56 +40,68 @@ export default function App() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: theme === 'dark' ? '#0d1117' : '#f6f8fa',
-      color: theme === 'dark' ? '#c9d1d9' : '#24292f',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+      background: 'var(--bg-app)',
+      color: 'var(--text-secondary)',
       display: 'flex',
       flexDirection: 'column'
     }}>
       {/* Top Navigation Bar */}
       <header style={{
-        background: theme === 'dark' ? '#161b22' : '#ffffff',
-        borderBottom: theme === 'dark' ? '1px solid #30363d' : '1px solid #d0d7de',
-        padding: '0 24px',
-        height: '64px',
+        background: 'var(--bg-surface)',
+        borderBottom: '1px solid var(--border-default)',
+        padding: '0 32px',
+        height: '68px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'sticky',
         top: 0,
-        zIndex: 100
+        zIndex: 100,
+        boxShadow: 'var(--shadow-xs)'
       }}>
         {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #1f6feb 0%, #238636 100%)',
-            width: '34px',
-            height: '34px',
-            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+            width: '38px',
+            height: '38px',
+            borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#fff',
             fontWeight: 800,
-            fontSize: '1rem'
+            fontSize: '1.05rem',
+            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
           }}>
             DI
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1.05rem', color: theme === 'dark' ? '#f0f6fc' : '#1f2328', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
               DocuIntel-AI
-              <span style={{ fontSize: '0.7rem', background: '#23863622', color: '#3fb950', border: '1px solid #23863655', padding: '1px 6px', borderRadius: '10px' }}>
-                Enterprise Docs Pilot
+              <span style={{
+                fontSize: '0.72rem',
+                background: 'var(--primary-light)',
+                color: 'var(--primary)',
+                border: '1px solid var(--primary-border)',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <FiZap size={11} /> Enterprise Docs Pilot
               </span>
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#8b949e' }}>
-              GenAI Authoring, Style Linting & Semantic Search for Docs-as-Code
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 400 }}>
+              GenAI Authoring, Automated Style Linting & Semantic Docs Search
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <nav style={{ display: 'flex', gap: '4px' }}>
+        <nav style={{ display: 'flex', gap: '6px', background: 'var(--bg-surface-subtle)', padding: '4px', borderRadius: '10px', border: '1px solid var(--border-default)' }}>
           {[
             { id: 'authoring', label: 'Authoring Studio', icon: FiEdit3 },
             { id: 'linter', label: 'Style & Terminology Linter', icon: FiCheckCircle },
@@ -100,22 +116,22 @@ export default function App() {
                 key={tab.id}
                 onClick={() => setCurrentTab(tab.id)}
                 style={{
-                  background: isActive ? (theme === 'dark' ? '#21262d' : '#ebf0f4') : 'transparent',
-                  color: isActive ? (theme === 'dark' ? '#f0f6fc' : '#0969da') : '#8b949e',
+                  background: isActive ? 'var(--bg-surface)' : 'transparent',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                   border: 'none',
-                  borderBottom: isActive ? '2px solid #fd8c73' : '2px solid transparent',
-                  padding: '8px 14px',
-                  fontSize: '0.85rem',
+                  padding: '7px 14px',
+                  fontSize: '0.84rem',
                   fontWeight: isActive ? 600 : 500,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  borderRadius: '6px 6px 0 0',
+                  borderRadius: '7px',
+                  boxShadow: isActive ? 'var(--shadow-xs)' : 'none',
                   transition: 'all 0.15s ease'
                 }}
               >
-                <Icon style={{ color: isActive ? '#58a6ff' : '#8b949e' }} />
+                <Icon style={{ color: isActive ? 'var(--primary)' : 'var(--text-muted)' }} size={15} />
                 {tab.label}
               </button>
             );
@@ -128,43 +144,45 @@ export default function App() {
             onClick={toggleTheme}
             title="Toggle theme"
             style={{
-              background: 'transparent',
-              border: theme === 'dark' ? '1px solid #30363d' : '1px solid #d0d7de',
-              color: '#8b949e',
-              padding: '6px',
-              borderRadius: '6px',
+              background: 'var(--bg-surface-subtle)',
+              border: '1px solid var(--border-default)',
+              color: 'var(--text-muted)',
+              padding: '8px',
+              borderRadius: '8px',
               cursor: 'pointer',
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              transition: 'all 0.15s ease'
             }}
           >
-            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+            {theme === 'dark' ? <FiSun size={16} /> : <FiMoon size={16} />}
           </button>
           <a
-            href="https://github.com/AtharvaDhobale"
+            href="https://github.com/AtharvaDhobale/DocuIntel-AI"
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              background: theme === 'dark' ? '#21262d' : '#f3f4f6',
-              color: theme === 'dark' ? '#c9d1d9' : '#24292f',
-              border: theme === 'dark' ? '1px solid #30363d' : '1px solid #d0d7de',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
+              background: 'var(--bg-surface-subtle)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-default)',
+              padding: '7px 14px',
+              borderRadius: '8px',
+              fontSize: '0.82rem',
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontWeight: 500
+              fontWeight: 500,
+              boxShadow: 'var(--shadow-xs)'
             }}
           >
-            <FiGithub /> AtharvaDhobale
+            <FiGithub size={15} /> DocuIntel-AI
           </a>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+      <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
         {currentTab === 'authoring' && (
           <AuthoringStudio 
             onSendToLinter={handleSendToLinter} 
@@ -192,11 +210,11 @@ export default function App() {
 
       {/* Footer Info */}
       <footer style={{
-        background: theme === 'dark' ? '#161b22' : '#ffffff',
-        borderTop: theme === 'dark' ? '1px solid #30363d' : '1px solid #d0d7de',
-        padding: '12px 24px',
-        fontSize: '0.75rem',
-        color: '#8b949e',
+        background: 'var(--bg-surface)',
+        borderTop: '1px solid var(--border-default)',
+        padding: '14px 32px',
+        fontSize: '0.8rem',
+        color: 'var(--text-muted)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -204,7 +222,7 @@ export default function App() {
         <span>
           DocuIntel-AI — Engineered by <strong>Atharva Dhobale</strong> for Cohesity Technical Writing & GenAI Docs Pilot.
         </span>
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '20px', fontWeight: 500 }}>
           <span>Docs-as-Code Pipeline</span>
           <span>DITA / Diátaxis Standard</span>
           <span>FastAPI + React 19</span>
